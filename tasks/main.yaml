@@ -8,8 +8,9 @@
     name: "{{ item.value.name }}"
     shell: "{{ item.value.shell }}"
     groups: "{{ item.value.groups }}"
-    password: "{{ item.value.password }}"
+    password: "{{ item.value.password | default(omit) }}"
     update_password: on_create
+    append: yes
   with_dict: "{{ users }}"
 
 - name: Add authorized key
