@@ -20,7 +20,6 @@
   with_subelements:
     - "{{ users }}"
     - authorized
-  tags: ak_debug
 
 - name: Add sudo group to sudoers
   lineinfile:
