@@ -1,7 +1,9 @@
 ---
 
 - name: Create sudo group
-  group: name=sudo state=present
+  group:
+    name: sudo
+    state: present
 
 - name: Add user {{ item.key }}
   user:
@@ -29,9 +31,10 @@
     line: '%sudo ALL=(ALL:ALL) ALL'
 
 - name: Add dotfiles
-  git: repo="{{ item.value.dotfiles }}"
-       dest=~/dotfiles
-       version=master
+  git:
+    repo: "{{ item.value.dotfiles }}"
+    dest: ~/dotfiles
+    version: master
   when: item.value.dotfiles is defined
   become: yes
   become_user: "{{ item.value.name }}"
@@ -41,7 +44,9 @@
   tags: dotfiles
 
 - name: Execute dotfile script
-  command: ~/dotfiles/makesymlinks.sh creates=~/dotfiles_old
+  command: ~/dotfiles/makesymlinks.sh
+  args:
+    creates: ~/dotfiles_old
   when: item.value.dotfiles is defined
   become: yes
   become_user: "{{ item.value.name }}"
