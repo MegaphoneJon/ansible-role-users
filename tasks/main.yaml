@@ -5,6 +5,14 @@
     name: sudo
     state: present
 
+- name: Set a default value for "additional_users"
+  set_fact:
+    additional_users: "{{ additional_users | default([]) }}"
+
+- name: Combine "users" and "additional users"
+  set_fact:
+    users: "{{ users | combine(additional_users) }}"
+
 # To not install all Megaphone users, override users.
 - name: Add Megaphone Users
   user:
@@ -17,20 +25,6 @@
     update_password: on_create
     append: yes
   with_dict: "{{ users }}"
-
-# To add additional users, define additional_users.
-- name: Add Additional Users
-  user:
-    name: "{{ item.value.name }}"
-    shell: "{{ item.value.shell | default('/usr/bin/bash')}}"
-    groups: "{{ item.value.groups | default(omit) }}"
-    password: "{{ item.value.password | default(omit) }}"
-    state: "{{ item.value.state | default('present') }}"
-    remove: "{{ item.value.remove | default('no') }}"
-    update_password: on_create
-    append: yes
-  with_dict: "{{ additional_users }}"
-  when: additional_users is defined
 
 - name: Add authorized key
   authorized_key:
