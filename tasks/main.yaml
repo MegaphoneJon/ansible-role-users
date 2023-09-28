@@ -22,7 +22,7 @@
     password: "{{ item.value.password | default(omit) }}"
     state: "{{ item.value.state | default('present') }}"
     remove: "{{ item.value.remove | default('no') }}"
-    update_password: on_create
+    update_password: "{{ item.value.update_password | default('on_create') }}"
     append: yes
   with_dict: "{{ users }}"
 
