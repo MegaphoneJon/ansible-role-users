@@ -8,10 +8,12 @@
 - name: Set a default value for "additional_users"
   set_fact:
     additional_users: "{{ additional_users | default([]) }}"
+  tags: user-keys
 
 - name: Combine "users" and "additional users"
   set_fact:
     users: "{{ users | combine(additional_users) }}"
+  tags: user-keys
 
 # To not install all Megaphone users, override users.
 - name: Add Megaphone Users
@@ -33,6 +35,7 @@
   with_subelements:
     - "{{ users }}"
     - authorized
+  tags: user-keys
 
 - name: Add sudo group to sudoers
   lineinfile:
